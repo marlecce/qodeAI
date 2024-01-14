@@ -1,6 +1,6 @@
 # qodeAI
 
-A system that collects data, stores it in Redis, and provides an interface for training and analyzing machine learning models.
+A system that, using Redis for data storage, analyzes the source code of a GIT repository, pre-processes the source code, trains machine learning models for optimizations, and provides analysis of the provided source code.
 
 ## Redis
 
