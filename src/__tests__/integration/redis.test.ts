@@ -1,14 +1,25 @@
-import { test, assert } from "vitest";
+import { test, assert, beforeAll, afterAll } from "vitest";
 import RedisClient from "../../redis/redis";
 
+let redisClient: RedisClient;
+
+beforeAll(async () => {
+    redisClient = new RedisClient({
+        host: "127.0.0.1",
+        port: 6379
+    });
+});
+
+afterAll(async () => {
+    await redisClient.quit();
+});
+
 test("Redis Client - should connect to Redis", async () => {
-    const redisClient = new RedisClient();
     const isConnected = await redisClient.isConnected();
     assert.isTrue(isConnected);
 });
 
 test("Redis Client - should set and get values from Redis", async () => {
-    const redisClient = new RedisClient();
     const key = "testKey";
     const value = "testValue";
 
@@ -17,11 +28,10 @@ test("Redis Client - should set and get values from Redis", async () => {
 
     assert.equal(retrievedValue, value);
 
-    await redisClient.delete(key);
+    await redisClient.del(key);
 });
 
 test("Redis Client - should return null for non-existing key", async () => {
-    const redisClient = new RedisClient();
     const nonExistingKey = "nonExistingKey";
     const retrievedValue = await redisClient.get(nonExistingKey);
 
