@@ -1,12 +1,12 @@
 import { test, assert, beforeAll, afterAll } from "vitest";
-import RedisClient from "../../redis/redis";
+import RedisClient from "../../storage/redis/redis-client";
 
 let redisClient: RedisClient;
 
 beforeAll(async () => {
     redisClient = new RedisClient({
-        host: "127.0.0.1",
-        port: 6379
+        host: process.env.VITE_REDIS_HOST,
+        port: Number(process.env.VITE_REDIS_PORT)
     });
 });
 
