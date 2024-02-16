@@ -1,7 +1,7 @@
 import Redis, { RedisOptions } from "ioredis";
 import { StorageClient } from "../interfaces/storage-client";
 
-class RedisClient extends Redis implements StorageClient {
+export class RedisClient extends Redis implements StorageClient {
     constructor(options: RedisOptions) {
         super(options);
     }
@@ -19,5 +19,3 @@ class RedisClient extends Redis implements StorageClient {
         throw new Error("Method not implemented.");
     }
 }
-
-export default RedisClient;

@@ -1,6 +1,6 @@
 import { describe, it, assert, beforeEach, afterEach } from "vitest";
 import * as fs from "fs";
-import GitCodeFetcher from "../../code/git/get-code-fetcher";
+import { GitCodeFetcher } from "../../code/fetcher/git/git-code-fetcher";
 
 const TEST_REPO_LOCAL_PATH = process.env.VITE_REPO_LOCAL_PATH || "";
 const REPO_URL = process.env.VITE_REPO_URL || "";

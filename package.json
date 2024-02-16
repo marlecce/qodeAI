@@ -1,5 +1,5 @@
 {
-    "name": "qodeAI",
+    "name": "qode-ai",
     "version": "1.0.0",
     "description": "",
     "main": "dist/main.js",
@@ -29,6 +29,7 @@
     },
     "dependencies": {
         "ioredis": "^5.3.2",
-        "simple-git": "^3.22.0"
+        "simple-git": "^3.22.0",
+        "ts-morph": "^21.0.1"
     }
 }

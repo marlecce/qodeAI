@@ -1,9 +1,9 @@
 // code/git/GitCodeFetcher.ts
-import { CodeFetcher } from "../interfaces/code-fetcher";
+import { CodeFetcher } from "../code-fetcher";
 import simpleGit, { SimpleGit } from "simple-git";
 import * as fs from "fs";
 
-class GitCodeFetcher implements CodeFetcher {
+export class GitCodeFetcher implements CodeFetcher {
     private localFolder: string;
     private repoUrl: string;
     private git: SimpleGit;
@@ -55,5 +55,3 @@ class GitCodeFetcher implements CodeFetcher {
         }
     }
 }
-
-export default GitCodeFetcher;

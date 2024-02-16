@@ -1,5 +1,5 @@
 import { test, assert, beforeAll, afterAll } from "vitest";
-import RedisClient from "../../storage/redis/redis-client";
+import { RedisClient } from "../../storage/redis/redis-client";
 
 let redisClient: RedisClient;
 
