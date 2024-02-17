@@ -4,7 +4,11 @@ import { CodeProcessor } from "../code-processor";
 export class TypeScriptProcessor implements CodeProcessor {
     private project: Project;
 
-    constructor(project: Project) {
+    constructor() {
+        this.project = new Project();
+    }
+
+    setProject(project: Project) {
         this.project = project;
     }
 

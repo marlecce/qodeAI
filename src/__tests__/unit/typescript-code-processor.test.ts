@@ -15,7 +15,8 @@ describe("TypeScriptProcessor", () => {
         const processSourceFileSpy = vi.spyOn(TypeScriptProcessor.prototype as any, "processSourceFile");
 
         // Create TypeScriptProcessor instance
-        const processor = new TypeScriptProcessor(projectMock);
+        const processor = new TypeScriptProcessor();
+        processor.setProject(projectMock);
 
         // Call processRepository with a mock repository path
         await processor.processRepository("/mock/repo/path");
@@ -46,7 +47,8 @@ describe("TypeScriptProcessor", () => {
         const processSourceFileSpy = vi.spyOn(TypeScriptProcessor.prototype as any, "processSourceFile");
 
         // Create TypeScriptProcessor instance
-        const processor = new TypeScriptProcessor(projectMock);
+        const processor = new TypeScriptProcessor();
+        processor.setProject(projectMock);
 
         // Call processRepository with a mock repository path
         await processor.processRepository(fakeRepoPath);

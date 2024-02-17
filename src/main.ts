@@ -1,5 +1,7 @@
 import { CodeFetcher } from "./code/fetcher/code-fetcher";
 import { GitCodeFetcher } from "./code/fetcher/git/git-code-fetcher";
+import { CodeProcessor } from "./code/processor/code-processor";
+import { TypeScriptProcessor } from "./code/processor/typescript/typescript-code-processor";
 // import SimpleCodeProcessor from "./code/SimpleCodeProcessor";
 // import { CodeProcessor } from "./code/interfaces/CodeProcessor";
 // import RedisClient from "./storage/redis/RedisClient";
@@ -16,15 +18,14 @@ async function main() {
 
     // Dependency configuration
     const gitCodeFetcher: CodeFetcher = new GitCodeFetcher(repoPath, repoUrl);
+    const codeProcessor: CodeProcessor = new TypeScriptProcessor();
     // const redisClient: StorageClient = new RedisClient({ host: "127.0.0.1", port: 6379 });
-    // const codeProcessor: CodeProcessor = new SimpleCodeProcessor();
 
     // Clone, pull, and fetch code
     await gitCodeFetcher.cloneRepository();
 
-    // // Extract and preprocess code
-    // const rawCode = await gitCodeFetcher.fetchCode();
-    // const processedCode = codeProcessor.process(rawCode);
+    // Extract and preprocess code
+    codeProcessor.processRepository(repoPath);
 
     // // Save preprocessed code to storage (e.g., Redis)
     // await redisClient.save("repositoryCode", processedCode);
