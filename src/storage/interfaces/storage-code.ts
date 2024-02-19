@@ -1,3 +1,9 @@
+enum Language {
+    TypeScript = "typescript",
+    JavaScript = "javascript",
+    Golang = "Golang"
+}
+
 interface StorageCode {
-    storeSourceCode(key: string, sourceCode: string, language: string): Promise<void>;
+    storeSourceCode(sourceCode: string, language: Language): Promise<void>;
 }

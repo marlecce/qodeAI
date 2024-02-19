@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { RedisClient } from "./redis-client";
 
 export class RedisCodeStorage implements StorageCode {
@@ -7,7 +8,16 @@ export class RedisCodeStorage implements StorageCode {
         this.redisClient = redisClient;
     }
 
-    async storeSourceCode(key: string, sourceCode: string, language: string): Promise<void> {
-        return this.redisClient.storeSourceCode(key, sourceCode, language);
+    async storeSourceCode(sourceCode: string, language: Language): Promise<void> {
+        const hash = crypto.createHash("sha256").update(sourceCode).digest("hex");
+
+        await this.redisClient.set(hash, sourceCode);
+
+        await this.redisClient.sadd("preprocessed_files", hash);
+
+        await this.redisClient.hmset(hash, {
+            language: language
+            // add metadata
+        });
     }
 }

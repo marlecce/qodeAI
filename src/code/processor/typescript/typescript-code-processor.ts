@@ -3,9 +3,11 @@ import { CodeProcessor } from "../code-processor";
 
 export class TypeScriptProcessor implements CodeProcessor {
     private project: Project;
+    private storage: StorageCode;
 
-    constructor() {
+    constructor(storage: StorageCode) {
         this.project = new Project();
+        this.storage = storage;
     }
 
     setProject(project: Project) {
@@ -19,7 +21,9 @@ export class TypeScriptProcessor implements CodeProcessor {
             let processedFiles = 0;
 
             for (const sourceFile of sourceFiles) {
-                this.processSourceFile(sourceFile);
+                const processedCode = this.processSourceFile(sourceFile);
+                await this.storage.storeSourceCode(processedCode, Language.TypeScript);
+
                 processedFiles++;
                 const completionPercentage = (processedFiles / totalFiles) * 100;
                 console.log(`Processing: ${completionPercentage.toFixed(2)}%`);
@@ -33,9 +37,10 @@ export class TypeScriptProcessor implements CodeProcessor {
         return this.project.addSourceFilesAtPaths(`${repoPath}/**/*.ts`);
     }
 
-    private processSourceFile(sourceFile: SourceFile): void {
+    private processSourceFile(sourceFile: SourceFile): string {
         sourceFile.getDescendants().forEach((node) => this.processNode(node));
         sourceFile.formatText();
+        return sourceFile.getFullText();
     }
 
     private processNode(node: Node): void {
