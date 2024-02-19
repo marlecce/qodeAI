@@ -5,7 +5,7 @@ A system that, using Redis for data storage, analyzes the source code of a GIT r
 ## Redis
 
 ```
-docker build -t qcodeai-redis-7.2.4 .
+docker build -t qcodeai-redis-7.2.4 ./docker
 docker run -p 6379:6379 --name qcodeai-redis -d qcodeai-redis-7.2.4
 ```
 

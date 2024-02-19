@@ -1,4 +1,4 @@
-import RedisClient from "./redis-client";
+import { RedisClient } from "./redis-client";
 
 export class RedisCodeStorage implements StorageCode {
     private redisClient: RedisClient;
