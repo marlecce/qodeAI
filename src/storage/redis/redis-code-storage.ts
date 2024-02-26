@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import { RedisClient } from "./redis-client";
+import { Language, StorageCode } from "../interfaces/storage-code";
 
 export class RedisCodeStorage implements StorageCode {
     private redisClient: RedisClient;
@@ -19,5 +20,28 @@ export class RedisCodeStorage implements StorageCode {
             language: language
             // add metadata
         });
+    }
+
+    async loadAllSourceCodeByLanguage(language: Language): Promise<Map<string, string>> {
+        const keys: string[] = [];
+        let cursor = "0";
+
+        do {
+            const [newCursor, scannedKeys] = await this.redisClient.scan(cursor, "MATCH", "*", "COUNT", "1000");
+            keys.push(...scannedKeys);
+            cursor = newCursor;
+        } while (cursor !== "0");
+
+        const languageKeys = keys.filter(async (key) => (await this.redisClient.hget(key, "language")) === language);
+        const sourceCodeMap = new Map<string, string>();
+
+        for (const key of languageKeys) {
+            const sourceCode = await this.redisClient.get(key);
+            if (sourceCode) {
+                sourceCodeMap.set(key, sourceCode);
+            }
+        }
+
+        return sourceCodeMap;
     }
 }

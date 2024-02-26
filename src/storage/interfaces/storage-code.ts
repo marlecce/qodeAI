@@ -1,9 +1,10 @@
-enum Language {
+export enum Language {
     TypeScript = "typescript",
     JavaScript = "javascript",
     Golang = "Golang"
 }
 
-interface StorageCode {
+export interface StorageCode {
     storeSourceCode(sourceCode: string, language: Language): Promise<void>;
+    loadAllSourceCodeByLanguage(language: Language): Promise<Map<string, string>>;
 }

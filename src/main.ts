@@ -1,16 +1,11 @@
+import { BERTModel } from "./ai/model/BERTModel";
 import { CodeFetcher } from "./code/fetcher/code-fetcher";
 import { GitCodeFetcher } from "./code/fetcher/git/git-code-fetcher";
 import { CodeProcessor } from "./code/processor/code-processor";
 import { TypeScriptProcessor } from "./code/processor/typescript/typescript-code-processor";
-import { StorageClient } from "./storage/interfaces/storage-client";
+import { Language } from "./storage/interfaces/storage-code";
 import { RedisClient } from "./storage/redis/redis-client";
 import { RedisCodeStorage } from "./storage/redis/redis-code-storage";
-// import SimpleCodeProcessor from "./code/SimpleCodeProcessor";
-// import { CodeProcessor } from "./code/interfaces/CodeProcessor";
-// import RedisClient from "./storage/redis/RedisClient";
-// import { StorageClient } from "./storage/interfaces/StorageClient";
-
-// import * as tf from "@tensorflow/tfjs-node"; // Import TensorFlow.js
 
 async function main() {
     if (!process.env.REPO_LOCAL_PATH) throw new Error("REPO_PATH env variable is missing: set it in your .env file");
@@ -34,34 +29,18 @@ async function main() {
     // Extract and preprocess code
     codeProcessor.processRepository(repoPath);
 
-    // // Save preprocessed code to storage (e.g., Redis)
-    // await redisClient.save("repositoryCode", processedCode);
+    // Create an instance of BERTModel with appropriate parameters
+    const bertModel = new BERTModel(redisStorage, Language.TypeScript);
 
-    // // Check the connection status to Redis
-    // const isConnected = await redisClient.isConnected();
-    // console.log("Redis connection status:", isConnected);
+    // Train the model
+    await bertModel.train();
 
-    // // Retrieve preprocessed code from storage
-    // const retrievedCode = await redisClient.get("repositoryCode");
-    // console.log("Retrieved code:", retrievedCode);
+    // Generate suggestions for new code
+    const newCode = `/* Insert new code here */`;
+    const suggestions = await bertModel.generateSuggestions(newCode);
 
-    // Model training (example with TensorFlow.js)
-    // const model = tf.sequential({
-    //     layers: [tf.layers.dense({ units: 1, inputShape: [1] })]
-    // });
-
-    // model.compile({ optimizer: "sgd", loss: "meanSquaredError" });
-
-    // // Training data (example with random data)
-    // const x = tf.tensor2d([[1], [2], [3], [4]], [4, 1]);
-    // const y = tf.tensor2d([[2], [4], [6], [8]], [4, 1]);
-
-    // // Model training
-    // await model.fit(x, y, { epochs: 100 });
-
-    // // Make predictions with the trained model
-    // const prediction = model.predict(tf.tensor2d([[5]], [1, 1]));
-    // console.log("Prediction:", prediction.dataSync()[0]);
+    console.log("Suggestions for the new code:");
+    console.log(suggestions);
 }
 
 // Run the main function

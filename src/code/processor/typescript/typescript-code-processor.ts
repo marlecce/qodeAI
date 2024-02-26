@@ -1,5 +1,6 @@
 import { Project, SourceFile, SyntaxKind, Node, Identifier, VariableDeclaration } from "ts-morph";
 import { CodeProcessor } from "../code-processor";
+import { Language, StorageCode } from "../../../storage/interfaces/storage-code";
 
 export class TypeScriptProcessor implements CodeProcessor {
     private project: Project;
@@ -22,6 +23,7 @@ export class TypeScriptProcessor implements CodeProcessor {
 
             for (const sourceFile of sourceFiles) {
                 const processedCode = this.processSourceFile(sourceFile);
+
                 await this.storage.storeSourceCode(processedCode, Language.TypeScript);
 
                 processedFiles++;
