@@ -34,16 +34,30 @@ export class BERTModel {
     }
 
     private tokenizeData(sourceCode: string): tf.Tensor2D {
-        // Implement source code tokenization using TensorFlow.js
-        // This is just a simplified example of how tokenization could be implemented
+        const tokenizedData = sourceCode.split(" ").map((token) => parseFloat(token)); // Convert string tokens to numbers
 
-        // Tokenize the source code
-        const tokenizedData = sourceCode.split(" "); // Source code tokenization
+        // Padding or trimming the tokenized data to ensure it has a fixed length of 512 tokens
+        const paddedData = this.padOrTrim(tokenizedData, 512);
 
         // Convert tokenized data into TensorFlow tensors
-        const tensorData = tf.tensor2d(tokenizedData);
+        const tensorData = tf.tensor2d([paddedData], [1, 512]);
 
         return tensorData;
+    }
+
+    private padOrTrim(data: number[], length: number): number[] {
+        // If data length is greater than desired length, trim the data
+        if (data.length > length) {
+            return data.slice(0, length);
+        }
+
+        // If data length is less than desired length, pad the data
+        if (data.length < length) {
+            const padding = Array(length - data.length).fill(0); // Fill with zeros for numerical data
+            return data.concat(padding);
+        }
+
+        return data;
     }
 
     private async trainModel(trainingData: tf.Tensor2D): Promise<void> {
@@ -51,11 +65,14 @@ export class BERTModel {
         const optimizer = tf.train.adam();
         const loss = "meanSquaredError";
 
+        // Prepare target data with the correct shape
+        const targetData = tf.ones([trainingData.shape[0], 1]); // Convert to float tensor
+
         // Compile the model with optimizer and loss function
         this.model.compile({ optimizer, loss });
 
-        // Train the model with preprocessed data
-        await this.model.fit(trainingData, trainingData, {
+        // Train the model with preprocessed data and target data
+        await this.model.fit(trainingData, targetData, {
             batchSize: 32,
             epochs: 10,
             shuffle: true
@@ -99,7 +116,7 @@ export class BERTModel {
         const tokenizedNewCode = this.tokenizeData(newCode);
 
         // Use the model to generate suggestions for the new source code
-        const predictions = (await this.model.predict(tokenizedNewCode)) as tf.Tensor;
+        const predictions = this.model.predict(tokenizedNewCode) as tf.Tensor;
 
         // Decode predictions and generate suggestions
         const suggestions = this.decodePredictions(predictions);

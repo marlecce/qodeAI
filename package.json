@@ -4,16 +4,17 @@
     "description": "",
     "main": "dist/main.js",
     "scripts": {
-        "start": "tsc && node dist/main.js",
+        "start": "tsc && node --env-file=.env dist/main.js",
         "test": "vitest run --coverage",
         "format": "prettier --config .prettierrc --write \"**/*.{js,jsx,ts,tsx}\"",
         "format:check": "prettier --list-different \"**/*.{js,jsx,ts,tsx}\" || (echo 'There are files that need formatting.' && exit 1)",
-        "lint": "eslint ."
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix "
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
-    "type": "module",
+    "type": "commonjs",
     "devDependencies": {
         "@types/node": "^20.11.0",
         "@typescript-eslint/eslint-plugin": "^6.18.1",

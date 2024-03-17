@@ -14,8 +14,4 @@ export class RedisClient extends Redis implements StorageClient {
             return false;
         }
     }
-
-    storeSourceCode(key: string, sourceCode: string, language: string) {
-        throw new Error("Method not implemented.");
-    }
 }

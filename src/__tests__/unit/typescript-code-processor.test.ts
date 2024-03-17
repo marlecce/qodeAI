@@ -12,11 +12,15 @@ describe("TypeScriptProcessor", () => {
         projectMock.addSourceFilesAtPaths = () => [sourceFileMock];
 
         // Spy on processSourceFile
-        const processSourceFileSpy = vi.spyOn(TypeScriptProcessor.prototype as any, "processSourceFile");
+        const processSourceFileSpy = vi.spyOn(
+            TypeScriptProcessor.prototype,
+            "processSourceFile" as keyof TypeScriptProcessor & string
+        );
 
         // Mock CodeStorage
         const storageMock = {
-            storeSourceCode: vi.fn()
+            storeSourceCode: vi.fn(),
+            loadAllSourceCodeByLanguage: vi.fn()
         };
 
         // Create TypeScriptProcessor instance
@@ -49,11 +53,15 @@ describe("TypeScriptProcessor", () => {
         projectMock.addSourceFilesAtPaths = () => [sourceFileMock];
 
         // Spy on processSourceFile
-        const processSourceFileSpy = vi.spyOn(TypeScriptProcessor.prototype as any, "processSourceFile");
+        const processSourceFileSpy = vi.spyOn(
+            TypeScriptProcessor.prototype,
+            "processSourceFile" as keyof TypeScriptProcessor & string
+        );
 
         // Mock CodeStorage
         const storageMock = {
-            storeSourceCode: vi.fn()
+            storeSourceCode: vi.fn(),
+            loadAllSourceCodeByLanguage: vi.fn()
         };
 
         // Create TypeScriptProcessor instance

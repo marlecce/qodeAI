@@ -1,4 +1,12 @@
-import { Project, SourceFile, SyntaxKind, Node, Identifier, VariableDeclaration } from "ts-morph";
+import {
+    Project,
+    SourceFile,
+    SyntaxKind,
+    Node,
+    Identifier,
+    VariableDeclaration,
+    ArrayLiteralExpression
+} from "ts-morph";
 import { CodeProcessor } from "../code-processor";
 import { Language, StorageCode } from "../../../storage/interfaces/storage-code";
 
@@ -53,6 +61,9 @@ export class TypeScriptProcessor implements CodeProcessor {
             case SyntaxKind.VariableDeclaration:
                 this.processVariableDeclaration(node as VariableDeclaration);
                 break;
+            case SyntaxKind.ArrayLiteralExpression:
+                this.processArrayLiteralExpression(node as ArrayLiteralExpression);
+                break;
             case SyntaxKind.SingleLineCommentTrivia:
             case SyntaxKind.MultiLineCommentTrivia:
                 node.replaceWithText("");
@@ -77,7 +88,35 @@ export class TypeScriptProcessor implements CodeProcessor {
 
     private processVariableDeclaration(variableDeclaration: VariableDeclaration): void {
         const name = variableDeclaration.getName();
+
+        if (name.startsWith("[") && name.endsWith("]")) {
+            const elements = name
+                .substring(1, name.length - 1)
+                .split(",")
+                .map((element) => element.trim());
+            elements.forEach((itemName, index) => {
+                const newName = this.normalizeName(itemName);
+                const declaration = variableDeclaration.getVariableStatement()?.getDeclarations()[index];
+                if (!declaration) {
+                    console.error("Declaration is undefined for item:", itemName);
+                    return;
+                }
+                const identifier = declaration.getFirstChildByKind(SyntaxKind.Identifier);
+                if (!identifier) {
+                    console.error("Identifier is undefined for item:", itemName);
+                    return;
+                }
+                identifier.rename(newName);
+            });
+            return;
+        }
         const newName = this.normalizeName(name);
         variableDeclaration.rename(newName);
+    }
+
+    private processArrayLiteralExpression(node: ArrayLiteralExpression): void {
+        node.getElements().forEach((element) => {
+            this.processNode(element);
+        });
     }
 }

@@ -13,35 +13,14 @@ export class RedisCodeStorage implements StorageCode {
         const hash = crypto.createHash("sha256").update(sourceCode).digest("hex");
 
         await this.redisClient.set(hash, sourceCode);
-
-        await this.redisClient.sadd("preprocessed_files", hash);
-
-        await this.redisClient.hmset(hash, {
-            language: language
-            // add metadata
-        });
+        await this.redisClient.sadd(language, hash);
     }
 
-    async loadAllSourceCodeByLanguage(language: Language): Promise<Map<string, string>> {
-        const keys: string[] = [];
-        let cursor = "0";
+    async loadAllSourceCodeByLanguage(language: Language): Promise<(string | null)[]> {
+        const hashes = await this.redisClient.smembers(language);
 
-        do {
-            const [newCursor, scannedKeys] = await this.redisClient.scan(cursor, "MATCH", "*", "COUNT", "1000");
-            keys.push(...scannedKeys);
-            cursor = newCursor;
-        } while (cursor !== "0");
+        const sourceCodes = await this.redisClient.mget(...hashes);
 
-        const languageKeys = keys.filter(async (key) => (await this.redisClient.hget(key, "language")) === language);
-        const sourceCodeMap = new Map<string, string>();
-
-        for (const key of languageKeys) {
-            const sourceCode = await this.redisClient.get(key);
-            if (sourceCode) {
-                sourceCodeMap.set(key, sourceCode);
-            }
-        }
-
-        return sourceCodeMap;
+        return sourceCodes.filter((sourceCode) => sourceCode !== null);
     }
 }

@@ -12,6 +12,14 @@
             "runtimeExecutable": "pnpm",
             "runtimeArgs": ["test"],
             "stopOnEntry": false
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "💪 Debug main process",
+            "cwd": "${workspaceRoot}",
+            "runtimeExecutable": "pnpm",
+            "runtimeArgs": ["start"]
         }
     ]
 }

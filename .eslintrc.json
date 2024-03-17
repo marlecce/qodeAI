@@ -6,6 +6,7 @@
         "ecmaVersion": 2020,
         "sourceType": "module"
     },
+    "ignorePatterns": ["dist/", "tmp/"],
     "rules": {
         "prettier/prettier": "error"
     },

@@ -6,5 +6,5 @@ export enum Language {
 
 export interface StorageCode {
     storeSourceCode(sourceCode: string, language: Language): Promise<void>;
-    loadAllSourceCodeByLanguage(language: Language): Promise<Map<string, string>>;
+    loadAllSourceCodeByLanguage(language: Language): Promise<(string | null)[]>;
 }

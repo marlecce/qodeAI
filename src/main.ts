@@ -35,7 +35,7 @@ async function main() {
     await gitCodeFetcher.cloneRepository();
 
     // Extract and preprocess code
-    codeProcessor.processRepository(repoPath);
+    await codeProcessor.processRepository(repoPath);
 
     // Create an instance of BERTModel with appropriate parameters
     const bertModel = new BERTModel(redisStorage, Language.TypeScript);
@@ -44,11 +44,13 @@ async function main() {
     await bertModel.train();
 
     // Generate suggestions for new code
-    const newCode = `/* Insert new code here */`;
+    const newCode = `const pippopluto == "hello"`;
     const suggestions = await bertModel.generateSuggestions(newCode);
 
     console.log("Suggestions for the new code:");
     console.log(suggestions);
+
+    process.exit(0);
 }
 
 // Run the main function
